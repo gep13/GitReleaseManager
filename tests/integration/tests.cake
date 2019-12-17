@@ -46,7 +46,17 @@ Task("Discard-Release")
     settings.Milestone = data.GrmMilestone;
 
     // TODO: This can be replaced when a discard alias is added to Cake
-    settings.ArgumentCustomization = args => ProcessArgumentBuilder.FromString(args.Render().Replace("create", "discard"));
+    settings.ArgumentCustomization = args => {
+        var newArgs = new ProcessArgumentBuilder()
+                        .Append("discard");
+
+        Array.ForEach(
+            args.Skip(1).ToArray(),
+            newArgs.Append
+            );
+
+        return newArgs;
+    };
 
     GitReleaseManagerCreate(
         data.GitHubUsername,
